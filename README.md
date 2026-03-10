@@ -1,7 +1,6 @@
 # End-to-end-Medical-Chatbot-Generative-AI
 
-
-# How to run?
+### How to run?
 ### STEPS:
 
 Clone the repository
