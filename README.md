@@ -1,4 +1,32 @@
-# End-to-end-Medical-Chatbot-Generative-AI
+# Medibot Chatbot - Medical AI Assistant
+
+Medibot is an end-to-end medical chatbot powered by Generative AI and Retrieval Augmented Generation (RAG). It provides accurate, context-aware medical information by leveraging a knowledge base without hallucinating responses.
+
+### Features
+- RAG-Powered Responses: Retrieves relevant medical context before generating answers, ensuring accuracy and reliability
+- Medical-Focused Assistant: Specialized system prompt that answers only using provided medical context
+- Web-Based Interface: Clean, user-friendly chat interface built with Flask
+- Semantic Search: Uses vector embeddings and Pinecone to find the most relevant medical information
+- Safe Responses: Never makes up answers - explicitly states when information is unavailable
+- Real-time Conversations: Interactive chat experience with instant responses
+  
+### Tech Stack
+- Backend: Flask (Python)
+- LLM: Cohere's Command R+ Model
+- Vector Store: Pinecone
+- Embeddings: HuggingFace Embeddings
+- Frontend: HTML/CSS with JavaScript
+
+### How It Works
+1. User submits a medical query through the chat interface
+2. The query is converted to embeddings using HuggingFace
+3. Pinecone retrieves the 3 most relevant documents from the medical knowledge base
+4. Cohere's language model generates a response based only on the retrieved context
+5. The response is displayed to the user in real-time
+
+<img width="962" height="662" alt="image" src="https://github.com/user-attachments/assets/340133b6-38f2-471a-96bd-00e23fd0dcc7" />
+
+<img width="1872" height="861" alt="image" src="https://github.com/user-attachments/assets/2d524de0-81e5-43d0-a2ba-624f594ee7bf" />
 
 ### How to run?
 #### STEPS:
