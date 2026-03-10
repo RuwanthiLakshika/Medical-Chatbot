@@ -1,9 +1,9 @@
 # Vector DB code
 
 from src.helper import load_pdf_file, download_hugging_face_embeddings, text_split
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone.grpc import PineconeGRPC
 from pinecone import ServerlessSpec
-from langchain_pinecone import PineconeVectorStore
+from langchain_pinecone import Pinecone as PineconeVectorStore
 from dotenv import load_dotenv
 import os
 
@@ -17,7 +17,7 @@ extracted_data = load_pdf_file(data='Data/')
 text_chunks=text_split(extracted_data)
 embeddings = download_hugging_face_embeddings()
 
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pc = PineconeGRPC(api_key=PINECONE_API_KEY)
 
 index_name = "medibot"
 

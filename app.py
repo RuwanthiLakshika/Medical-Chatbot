@@ -1,10 +1,10 @@
 from flask import Flask, render_template, jsonify, request
 from src.helper import download_hugging_face_embeddings
-from langchain_pinecone import PineconeVectorStore
+from langchain_pinecone import Pinecone as PineconeVectorStore
 from langchain_cohere import ChatCohere
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 from dotenv import load_dotenv
 from src.prompt import *
 import os
@@ -30,17 +30,29 @@ dosearch = PineconeVectorStore.from_existing_index(
 
 retriever = dosearch.as_retriever(search_type="similarity", search_kwargs={"k":3})
 
-llm = ChatCohere(model="command-r", temperature=0)
+llm = ChatCohere(model="command-r-plus-08-2024", temperature=0)
+
+# Function to format retrieved documents into context text
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
 
 promt = ChatPromptTemplate.from_messages(
     [
         ("system", system_prompt),
-        ("human", "{input}"),
+        ("human", "Context:\n{context}\n\nQuestion: {input}"),
     ]
 )
 
-quection_answer_chain = create_stuff_documents_chain(llm, promt)
-rag_chain = create_retrieval_chain(retriever, quection_answer_chain)
+# Create a RAG chain that properly formats context
+rag_chain = (
+    {
+        "context": lambda x: format_docs(retriever.invoke(x["input"])),
+        "input": lambda x: x["input"]
+    }
+    | promt
+    | llm
+    | StrOutputParser()
+)
 
 @app.route("/")
 def index():
@@ -52,8 +64,8 @@ def chat():
     input = msg
     print(input)
     response = rag_chain.invoke({"input" : msg})
-    print("response :", response["answer"])
-    return str(response["answer"])
+    print("response :", response)
+    return str(response)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
